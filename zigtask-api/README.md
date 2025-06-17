@@ -1,98 +1,226 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# ZigTask API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A Task Management application built with NestJS, MongoDB, and TypeScript. This API provides user authentication and task management functionality with full CRUD operations.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+##  Features
 
-## Description
+-  **User Authentication**: Registration and login with JWT
+-  **User Management**: CRUD operations for users
+-  **Task Management**: Create, read, update, delete tasks
+-  **Status Tracking**: Todo, In Progress, Done
+-  **Search and Filter**: Search by title and date range
+-  **Group by Status**: View tasks grouped by status
+-  **API Documentation**: Integrated Swagger UI
+-  **Docker Support**: Ready for containerization
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+##  Tech Stack
 
-## Project setup
+- **Backend Framework**: NestJS
+- **Database**: MongoDB with Mongoose
+- **Authentication**: JWT (JSON Web Tokens)
+- **Validation**: Class Validator
+- **Documentation**: Swagger/OpenAPI
+- **Language**: TypeScript
+- **Package Manager**: npm
 
-```bash
-$ npm install
-```
+##  System Requirements
 
-## Compile and run the project
+- Node.js 18+ 
+- npm 8+
+- MongoDB 5+
+- Docker (optional)
 
-```bash
-# development
-$ npm run start
+##  Installation and Setup
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
+### 1. Clone repository
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone <repository-url>
+cd zigtask-api
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2. Install dependencies
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 3. Environment configuration
 
-## Resources
+Create a `.env` file in the root directory:
 
-Check out a few resources that may come in handy when working with NestJS:
+```env
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_secret_jwt_key
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 4. Start MongoDB
 
-## Support
+```bash
+# Using Docker
+docker run -d -p 27017:27017 --name mongodb mongo:latest
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Or use local MongoDB installation
+mongod
+```
 
-## Stay in touch
+### 5. Run the application
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+# Development mode
+npm run start:dev
 
-## License
+# Production mode
+npm run build
+npm run start:prod
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+The application will run at: `http://localhost:3000`
+
+##  Running with Docker
+
+### 1. Build Docker image
+
+```bash
+docker build -t zigtask-api .
+```
+
+### 2. Run individually
+
+```bash
+# Run MongoDB
+docker run -d --name mongodb -p 27017:27017 mongo:latest
+
+# Run app
+docker run -d \
+  --name zigtask-api \
+  -p 3000:3000 \
+  -e MONGO_URI=mongodb://mongodb:27017/zigtask \
+  -e JWT_SECRET=your-super-secret-jwt-key \
+  --link mongodb \
+  zigtask-api
+```
+
+##  API Documentation
+
+After running the application, access Swagger UI at:
+
+```
+http://localhost:3000/api/docs
+```
+
+### Main endpoints:
+
+#### Authentication
+- `POST /api/auth/signup`       - Register a new account
+- `POST /api/auth/signin`       - Sign in
+
+#### Users
+- `GET /api/users`              - Get all users
+- `GET /api/users/:id`          - Get user by ID
+- `POST /api/users`             - Create new user
+- `PUT /api/users/:id`          - Update user
+- `DELETE /api/users/:id`       - Delete user
+
+#### Tasks  
+- `GET /api/tasks`              - Search and filter tasks
+- `POST /api/tasks`             - Create new task
+- `PATCH /api/tasks/:id`        - Update task
+- `DELETE /api/tasks/:id`       - Delete task
+- `GET /api/tasks/grouped`      - Get tasks grouped by status
+- `PATCH /api/tasks/:id/status` - Update task status
+
+##  Project Structure
+
+```
+src/
+├── main.ts                       # Entry point, Swagger configuration
+├── app.module.ts                 # Root module, MongoDB configuration
+├── auth/                         # Authentication module
+│   ├── auth.controller.ts        # Controller for signup/signin
+│   ├── auth.service.ts           # Authentication logic, JWT
+│   ├── auth.module.ts            # Auth module configuration
+│   └── dto/                      # Data Transfer Objects
+│       ├── signin.dto.ts         # DTO for sign in
+│       └── signup.dto.ts         # DTO for sign up
+├── user/                         # User module
+│   ├── user.controller.ts        # CRUD controller for users
+│   ├── user.service.ts           # User business logic
+│   ├── user.module.ts            # User module configuration
+│   └── user.schema.ts            # MongoDB schema for User
+├── tasks/                        # Tasks module
+│   ├── tasks.controller.ts       # CRUD controller, filter, group
+│   ├── tasks.service.ts          # Task business logic
+│   ├── tasks.module.ts           # Tasks module configuration
+│   ├── tasks.schema.ts           # MongoDB schema for Task, TaskStatus enum
+│   └── dto/                      # Data Transfer Objects
+│       ├── create-task.dto.ts    # DTO for creating task
+│       ├── update-task.dto.ts    # DTO for updating task
+│       └── filter-task.dto.ts    # DTO for filtering tasks
+└── utils/                        # Utilities
+    └── response.dto.ts           # Standardized response format
+```
+
+### File descriptions:
+
+#### Core Files
+- **main.ts**: Entry point, Swagger UI setup, global prefix `/api`
+- **app.module.ts**: Root module, MongoDB connection configuration, module imports
+
+#### Authentication Module
+- **auth.controller.ts**: Handles signup/signin API endpoints
+- **auth.service.ts**: Authentication logic, password hashing, JWT token generation
+- **signin.dto.ts**: Validation for email/password sign in
+- **signup.dto.ts**: Validation for registration (email, password, fullName)
+
+#### User Module  
+- **user.controller.ts**: CRUD API for users with Swagger decorators
+- **user.service.ts**: User business logic (find, create, update, delete)
+- **user.schema.ts**: MongoDB schema defining User (email, password, fullName)
+
+#### Tasks Module
+- **tasks.controller.ts**: CRUD API, filter, group tasks by status  
+- **tasks.service.ts**: Task business logic, search/filter by title and date range
+- **tasks.schema.ts**: MongoDB schema for Task (title, description, dueDate, status)
+- **create-task.dto.ts**: Validation for creating tasks
+- **update-task.dto.ts**: Validation for updating tasks  
+- **filter-task.dto.ts**: Validation for filtering by title, from/to date
+
+#### Utilities
+- **response.dto.ts**: Standardized response format (data, statusCode, message)
+
+##  Testing
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests  
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
+```
+
+##  Available Scripts
+
+```bash
+npm run build        # Build for production
+npm run start        # Run production
+npm run start:dev    # Run development with watch mode
+npm run start:debug  # Run debug mode
+npm run lint         # Run ESLint
+npm run format       # Format code with Prettier
+```
+
+##  Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Create a Pull Request
+
+##  License
+
+This project is released under [UNLICENSED](LICENSE).

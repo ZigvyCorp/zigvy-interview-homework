@@ -1,25 +1,23 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './user/user.module';
+import { TaskModule } from './tasks/tasks.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({
+    MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        host: config.get('DB_HOST'),
-        port: parseInt(config.get<string>('DB_PORT') ?? '5432'),
-        username: config.get('DB_USER'),
-        password: config.get('DB_PASS'),
-        database: config.get('DB_NAME'),
-        autoLoadEntities: true,
-        synchronize: true,
+        uri: config.get<string>('MONGO_URI'),
       }),
       inject: [ConfigService],
     }),
+    UserModule,
+    TaskModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
