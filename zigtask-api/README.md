@@ -1,226 +1,259 @@
-# ZigTask API
+# 🚀 ZigTask API - NestJS Backend
 
-A Task Management application built with NestJS, MongoDB, and TypeScript. This API provides user authentication and task management functionality with full CRUD operations.
+A modern **NestJS TypeScript backend** for the ZigTask task management application, featuring **JWT authentication**, **AI-powered task suggestions**, **email notifications**, **MongoDB integration**, and **comprehensive RESTful APIs**.
 
-##  Features
+![NestJS](https://img.shields.io/badge/NestJS-10.x-ea2845)
+![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue)
+![MongoDB](https://img.shields.io/badge/MongoDB-7.x-47a248)
+![JWT](https://img.shields.io/badge/JWT-Authentication-000000)
 
--  **User Authentication**: Registration and login with JWT
--  **User Management**: CRUD operations for users
--  **Task Management**: Create, read, update, delete tasks
--  **Status Tracking**: Todo, In Progress, Done
--  **Search and Filter**: Search by title and date range
--  **Group by Status**: View tasks grouped by status
--  **API Documentation**: Integrated Swagger UI
--  **Docker Support**: Ready for containerization
+---
 
-##  Tech Stack
+## 🌟 Features Overview
 
-- **Backend Framework**: NestJS
-- **Database**: MongoDB with Mongoose
-- **Authentication**: JWT (JSON Web Tokens)
-- **Validation**: Class Validator
-- **Documentation**: Swagger/OpenAPI
-- **Language**: TypeScript
-- **Package Manager**: npm
+### **🔐 Authentication & Security**
+- **JWT-based authentication** with bcrypt password hashing
+- **Bearer token authorization** for protected endpoints
+- **User registration/login** with email validation
+- **Password strength requirements** and secure storage
+- **Token expiration** and refresh mechanisms
 
-##  System Requirements
+### **📋 Task Management**
+- **Complete CRUD operations** for tasks
+- **Status tracking** (TODO, IN_PROGRESS, DONE)
+- **Search and filtering** by title, date range, and status
+- **Task grouping** by status for dashboard views
+- **Due date management** with overdue detection
+- **User-specific task isolation** for multi-tenant support
 
-- Node.js 18+ 
-- npm 8+
-- MongoDB 5+
-- Docker (optional)
+### **🤖 AI Integration**
+- **Google Gemini AI** integration for task suggestions
+- **Contextual task generation** based on user prompts
+- **JSON response parsing** for structured task data
+- **Error handling** for AI service failures
 
-##  Installation and Setup
+### **📧 Notifications & Automation**
+- **Email notifications** via SMTP with Nodemailer
+- **Automated reminders** using cron jobs
+- **Scheduled task notifications** for due dates
+- **Configurable email templates** and settings
 
-### 1. Clone repository
+### **📚 Documentation & Testing**
+- **Swagger/OpenAPI** integration with detailed API docs
+- **Comprehensive unit tests** for all services
+- **E2E testing** for API endpoints
+- **Type-safe DTOs** with validation decorators
 
-```bash
-git clone <repository-url>
-cd zigtask-api
+---
+
+## 🏗️ Technical Architecture
+
+### **📦 Project Structure**
+```
+zigtask-api/
+├── src/
+│   ├── main.ts                    # Application entry point
+│   ├── app.module.ts             # Root module configuration
+│   ├── auth/                     # Authentication module
+│   │   ├── auth.controller.ts    # Auth endpoints (signup/signin)
+│   │   ├── auth.service.ts       # JWT & password logic
+│   │   ├── auth.module.ts        # Auth module config
+│   │   └── dto/                  # Authentication DTOs
+│   │       ├── signin.dto.ts     # Sign-in validation
+│   │       └── signup.dto.ts     # Registration validation
+│   ├── user/                     # User management module
+│   │   ├── user.module.ts        # User module config
+│   │   └── user.schema.ts        # MongoDB User schema
+│   ├── tasks/                    # Task management module
+│   │   ├── tasks.controller.ts   # Task CRUD endpoints
+│   │   ├── tasks.service.ts      # Task business logic
+│   │   ├── tasks.module.ts       # Tasks module config
+│   │   ├── tasks.schema.ts       # MongoDB Task schema
+│   │   └── dto/                  # Task DTOs
+│   │       ├── create-task.dto.ts
+│   │       ├── update-task.dto.ts
+│   │       └── filter-task.dto.ts
+│   ├── ai/                       # AI integration module
+│   │   ├── ai.controller.ts      # AI endpoints
+│   │   ├── ai.service.ts         # Google Gemini integration
+│   │   └── ai.module.ts          # AI module config
+│   ├── mail/                     # Email service module
+│   │   ├── mail.service.ts       # SMTP email sending
+│   │   └── mail.module.ts        # Mail module config
+│   ├── notification/             # Notification automation
+│   │   ├── notification.service.ts # Cron job notifications
+│   │   └── notification.module.ts  # Notification config
+│   └── utils/                    # Shared utilities
+│       ├── jwt.module.ts         # JWT service module
+│       ├── jwt.service.ts        # JWT token operations
+│       └── response.dto.ts       # Standardized responses
+├── test/                         # Test files
+│   ├── app.e2e-spec.ts          # End-to-end tests
+│   └── jest-e2e.json            # E2E test configuration
+├── .env                          # Environment variables
+├── package.json                  # Dependencies and scripts
+├── nest-cli.json                 # NestJS CLI configuration
+└── tsconfig.json                 # TypeScript configuration
 ```
 
-### 2. Install dependencies
+### **🛠️ Tech Stack**
 
+#### **Core Framework**
+- **NestJS 10.x** - Progressive Node.js framework
+- **TypeScript** - Static type checking and modern JS features
+- **Express.js** - Underlying HTTP server framework
+
+#### **Database & ORM**
+- **MongoDB 7.x** - NoSQL document database
+- **Mongoose** - Elegant MongoDB object modeling
+- **Schema validation** - Built-in data validation
+
+#### **Authentication & Security**
+- **JWT (jsonwebtoken)** - Stateless authentication tokens
+- **bcryptjs** - Password hashing and salting
+- **Passport.js** - Authentication middleware
+- **Class Validator** - DTO validation decorators
+
+#### **External Integrations**
+- **Google Generative AI** - AI-powered task suggestions
+- **Nodemailer** - Email sending with SMTP support
+- **@nestjs/schedule** - Cron job automation
+
+#### **Development & Testing**
+- **Swagger/OpenAPI** - API documentation
+- **Jest** - Unit and integration testing
+- **ESLint** - Code quality and linting
+- **Prettier** - Code formatting
+
+---
+
+## 🚀 Quick Start
+
+### **Prerequisites**
+- **Node.js** 18+ and **npm**
+- **MongoDB** 5+ (local or cloud)
+- **Google AI API Key** (for AI features)
+- **SMTP Email Account** (for notifications)
+
+### **1. Installation**
 ```bash
+cd zigtask-api
 npm install
 ```
 
-### 3. Environment configuration
-
-Create a `.env` file in the root directory:
+### **2. Environment Setup**
+Create `.env` file in project root:
 
 ```env
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret_jwt_key
+# Database Configuration
+MONGO_URI=mongodb://localhost:27017/zigtask
+# Or MongoDB Atlas: mongodb+srv://user:password@cluster.mongodb.net/zigtask
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-minimum-32-characters
+JWT_EXPIRES_IN=7d
+
+# Google AI Configuration (for task suggestions)
+GOOGLE_AI_API_KEY=your-google-ai-api-key
+
+# Email Configuration (for notifications)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+SMTP_FROM=noreply@zigtask.com
+
+# Application Configuration
+PORT=3000
+NODE_ENV=development
 ```
 
-### 4. Start MongoDB
-
+### **3. Database Setup**
 ```bash
-# Using Docker
-docker run -d -p 27017:27017 --name mongodb mongo:latest
+# Option 1: Using Docker
+docker run -d --name mongodb -p 27017:27017 mongo:latest
 
-# Or use local MongoDB installation
-mongod
+# Option 2: Local MongoDB installation
+# Download and install MongoDB Community Server
+# Start MongoDB service: mongod
+
+# Option 3: MongoDB Atlas (cloud)
+# Create cluster at https://cloud.mongodb.com
+# Use connection string in MONGO_URI
 ```
 
-### 5. Run the application
-
+### **4. Development Server**
 ```bash
-# Development mode
+# Start development server with hot reload
 npm run start:dev
 
-# Production mode
+# Server will start on http://localhost:3000
+# Swagger UI available at http://localhost:3000/api/docs
+```
+
+### **5. Build for Production**
+```bash
+# Create production build
 npm run build
+
+# Start production server
 npm run start:prod
 ```
 
-The application will run at: `http://localhost:3000`
+---
 
-##  Running with Docker
+## 🔧 Available Scripts
 
-### 1. Build Docker image
+| Command | Description |
+|---------|-------------|
+| `npm run start` | Start production server |
+| `npm run start:dev` | Start development server with hot reload |
+| `npm run start:debug` | Start server in debug mode |
+| `npm run start:prod` | Start production server from build |
+| `npm run build` | Build production-ready application |
+| `npm run test` | Run unit tests |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:cov` | Run tests with coverage report |
+| `npm run test:e2e` | Run end-to-end tests |
+| `npm run lint` | Run ESLint for code quality |
+| `npm run format` | Format code with Prettier |
 
-```bash
-docker build -t zigtask-api .
-```
+---
 
-### 2. Run individually
+## 📚 API Documentation
 
-```bash
-# Run MongoDB
-docker run -d --name mongodb -p 27017:27017 mongo:latest
-
-# Run app
-docker run -d \
-  --name zigtask-api \
-  -p 3000:3000 \
-  -e MONGO_URI=mongodb://mongodb:27017/zigtask \
-  -e JWT_SECRET=your-super-secret-jwt-key \
-  --link mongodb \
-  zigtask-api
-```
-
-##  API Documentation
-
-After running the application, access Swagger UI at:
-
+### **🌐 Swagger UI**
+Access interactive API documentation at:
 ```
 http://localhost:3000/api/docs
 ```
 
-### Main endpoints:
+---
 
-#### Authentication
-- `POST /api/auth/signup`       - Register a new account
-- `POST /api/auth/signin`       - Sign in
+## 📞 Support & Contributing
 
-#### Users
-- `GET /api/users`              - Get all users
-- `GET /api/users/:id`          - Get user by ID
-- `POST /api/users`             - Create new user
-- `PUT /api/users/:id`          - Update user
-- `DELETE /api/users/:id`       - Delete user
+### **🐛 Bug Reports**
+1. Check existing issues on GitHub
+2. Provide detailed reproduction steps
+3. Include environment information
+4. Attach relevant logs
 
-#### Tasks  
-- `GET /api/tasks`              - Search and filter tasks
-- `POST /api/tasks`             - Create new task
-- `PATCH /api/tasks/:id`        - Update task
-- `DELETE /api/tasks/:id`       - Delete task
-- `GET /api/tasks/grouped`      - Get tasks grouped by status
-- `PATCH /api/tasks/:id/status` - Update task status
+### **🚀 Feature Requests**
+1. Discuss proposals in GitHub discussions
+2. Follow contribution guidelines
+3. Write tests for new features
+4. Update documentation
 
-##  Project Structure
+### **📚 Development Guidelines**
+- **Code Style**: Follow ESLint and Prettier rules
+- **Testing**: Maintain >80% test coverage
+- **Documentation**: Update Swagger annotations
+- **Type Safety**: Use TypeScript strictly
 
-```
-src/
-├── main.ts                       # Entry point, Swagger configuration
-├── app.module.ts                 # Root module, MongoDB configuration
-├── auth/                         # Authentication module
-│   ├── auth.controller.ts        # Controller for signup/signin
-│   ├── auth.service.ts           # Authentication logic, JWT
-│   ├── auth.module.ts            # Auth module configuration
-│   └── dto/                      # Data Transfer Objects
-│       ├── signin.dto.ts         # DTO for sign in
-│       └── signup.dto.ts         # DTO for sign up
-├── user/                         # User module
-│   ├── user.controller.ts        # CRUD controller for users
-│   ├── user.service.ts           # User business logic
-│   ├── user.module.ts            # User module configuration
-│   └── user.schema.ts            # MongoDB schema for User
-├── tasks/                        # Tasks module
-│   ├── tasks.controller.ts       # CRUD controller, filter, group
-│   ├── tasks.service.ts          # Task business logic
-│   ├── tasks.module.ts           # Tasks module configuration
-│   ├── tasks.schema.ts           # MongoDB schema for Task, TaskStatus enum
-│   └── dto/                      # Data Transfer Objects
-│       ├── create-task.dto.ts    # DTO for creating task
-│       ├── update-task.dto.ts    # DTO for updating task
-│       └── filter-task.dto.ts    # DTO for filtering tasks
-└── utils/                        # Utilities
-    └── response.dto.ts           # Standardized response format
-```
+---
 
-### File descriptions:
+## ⚖️ License
 
-#### Core Files
-- **main.ts**: Entry point, Swagger UI setup, global prefix `/api`
-- **app.module.ts**: Root module, MongoDB connection configuration, module imports
+This project is part of a technical assessment and is for demonstration purposes only.
 
-#### Authentication Module
-- **auth.controller.ts**: Handles signup/signin API endpoints
-- **auth.service.ts**: Authentication logic, password hashing, JWT token generation
-- **signin.dto.ts**: Validation for email/password sign in
-- **signup.dto.ts**: Validation for registration (email, password, fullName)
-
-#### User Module  
-- **user.controller.ts**: CRUD API for users with Swagger decorators
-- **user.service.ts**: User business logic (find, create, update, delete)
-- **user.schema.ts**: MongoDB schema defining User (email, password, fullName)
-
-#### Tasks Module
-- **tasks.controller.ts**: CRUD API, filter, group tasks by status  
-- **tasks.service.ts**: Task business logic, search/filter by title and date range
-- **tasks.schema.ts**: MongoDB schema for Task (title, description, dueDate, status)
-- **create-task.dto.ts**: Validation for creating tasks
-- **update-task.dto.ts**: Validation for updating tasks  
-- **filter-task.dto.ts**: Validation for filtering by title, from/to date
-
-#### Utilities
-- **response.dto.ts**: Standardized response format (data, statusCode, message)
-
-##  Testing
-
-```bash
-# Unit tests
-npm run test
-
-# E2E tests  
-npm run test:e2e
-
-# Test coverage
-npm run test:cov
-```
-
-##  Available Scripts
-
-```bash
-npm run build        # Build for production
-npm run start        # Run production
-npm run start:dev    # Run development with watch mode
-npm run start:debug  # Run debug mode
-npm run lint         # Run ESLint
-npm run format       # Format code with Prettier
-```
-
-##  Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Create a Pull Request
-
-##  License
-
-This project is released under [UNLICENSED](LICENSE).
+---
