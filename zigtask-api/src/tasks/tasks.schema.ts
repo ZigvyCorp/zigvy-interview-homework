@@ -13,6 +13,10 @@ export enum TaskStatus {
 
 @Schema({ timestamps: true })
 export class Task {
+  @ApiProperty({ description: 'Task owner ID' })
+  @Prop({ required: true })
+  ownerId: string;
+
   @ApiProperty({ description: 'Task title', example: 'Finish report' })
   @Prop({ required: true })
   title: string;

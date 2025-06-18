@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   Query,
+  Headers,
 } from '@nestjs/common';
 import { TaskService } from './tasks.service';
 import { TaskStatus } from './tasks.schema';
@@ -19,9 +20,11 @@ import {
   ApiBody,
   ApiParam,
   ApiQuery,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 @ApiTags('Tasks')
+@ApiHeader({ name: 'Authorization', required: true })
 @Controller('tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
@@ -29,29 +32,39 @@ export class TaskController {
   @Post()
   @ApiOperation({ summary: 'Create a new task' })
   @ApiBody({ type: CreateTaskDto })
-  create(@Body() body: CreateTaskDto) {
-    return this.taskService.createTask(body);
+  create(
+    @Body() body: CreateTaskDto,
+    @Headers('authorization') accessToken: string,
+  ) {
+    return this.taskService.createTask(body, accessToken);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update an existing task by ID' })
   @ApiParam({ name: 'id', description: 'Task ID' })
   @ApiBody({ type: UpdateTaskDto })
-  update(@Param('id') id: string, @Body() body: UpdateTaskDto) {
-    return this.taskService.updateTask(id, body);
+  update(
+    @Param('id') id: string,
+    @Body() body: UpdateTaskDto,
+    @Headers('authorization') accessToken: string,
+  ) {
+    return this.taskService.updateTask(id, body, accessToken);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a task by ID' })
   @ApiParam({ name: 'id', description: 'Task ID' })
-  remove(@Param('id') id: string) {
-    return this.taskService.deleteTask(id);
+  remove(
+    @Param('id') id: string,
+    @Headers('authorization') accessToken: string,
+  ) {
+    return this.taskService.deleteTask(id, accessToken);
   }
 
   @Get('grouped')
   @ApiOperation({ summary: 'Get tasks grouped by status' })
-  getGrouped() {
-    return this.taskService.getTasksGrouped();
+  getGrouped(@Headers('authorization') accessToken: string) {
+    return this.taskService.getTasksGrouped(accessToken);
   }
 
   @Patch(':id/status')
@@ -68,28 +81,23 @@ export class TaskController {
       },
     },
   })
-  toggleStatus(@Param('id') id: string, @Body('status') status: TaskStatus) {
-    return this.taskService.toggleStatus(id, status);
+  toggleStatus(
+    @Param('id') id: string,
+    @Body('status') status: TaskStatus,
+    @Headers('authorization') accessToken: string,
+  ) {
+    return this.taskService.toggleStatus(id, status, accessToken);
   }
 
   @Get()
   @ApiOperation({ summary: 'Search and filter tasks by title and date range' })
-  @ApiQuery({
-    name: 'title',
-    required: false,
-    description: 'Title of the task',
-  })
-  @ApiQuery({
-    name: 'from',
-    required: false,
-    description: 'Start date (ISO format)',
-  })
-  @ApiQuery({
-    name: 'to',
-    required: false,
-    description: 'End date (ISO format)',
-  })
-  search(@Query() query: FilterTaskDto) {
-    return this.taskService.searchAndFilter(query);
+  @ApiQuery({ name: 'title', required: false })
+  @ApiQuery({ name: 'from', required: false })
+  @ApiQuery({ name: 'to', required: false })
+  search(
+    @Query() query: FilterTaskDto,
+    @Headers('authorization') accessToken: string,
+  ) {
+    return this.taskService.searchAndFilter(query, accessToken);
   }
 }
