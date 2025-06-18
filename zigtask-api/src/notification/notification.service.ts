@@ -17,7 +17,7 @@ export class NotificationService {
     private readonly mailService: MailService,
   ) {}
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async sendScheduledReminder() {
     this.logger.log('Checking for tasks due within the next hour...');
 
@@ -26,6 +26,7 @@ export class NotificationService {
 
     const tasksDueSoon = await this.taskModel.find({
       dueDate: { $gte: now, $lte: oneHourLater },
+      notified: false,
     });
 
     if (!tasksDueSoon.length) {
@@ -72,5 +73,11 @@ export class NotificationService {
 
       this.logger.log(`Email sent to ${email}`);
     }
+
+    const taskIds = tasksDueSoon.map((t) => t._id);
+    await this.taskModel.updateMany(
+      { _id: { $in: taskIds } },
+      { $set: { notified: true } },
+    );
   }
 }

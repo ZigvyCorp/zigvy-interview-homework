@@ -42,6 +42,9 @@ export class Task {
   })
   @Prop({ enum: TaskStatus, default: TaskStatus.TODO })
   status: TaskStatus;
+
+  @Prop({ default: false })
+  notified: boolean;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
