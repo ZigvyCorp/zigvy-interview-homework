@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import
+    {
+        Entity,
+        PrimaryGeneratedColumn,
+        Column,
+        ManyToOne,
+        CreateDateColumn,
+    } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 export enum TaskStatus
@@ -18,7 +25,7 @@ export class Task
     title: string;
 
     @Column( { nullable: true } )
-    description: string;
+    description?: string;
 
     @Column( { type: 'timestamp' } )
     dueDate: Date;
@@ -26,7 +33,7 @@ export class Task
     @Column( { type: 'enum', enum: TaskStatus, default: TaskStatus.TODO } )
     status: TaskStatus;
 
-    @ManyToOne( () => User, ( user: User ) => user.tasks, { onDelete: 'CASCADE' } )
+    @ManyToOne( () => User, user => user.tasks, { onDelete: 'CASCADE' } )
     user: User;
 
     @CreateDateColumn()
