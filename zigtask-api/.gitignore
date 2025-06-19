@@ -1,0 +1,37 @@
+# Node dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Local environment files
+.env
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Debug files
+pids
+*.pid
+
+# Coverage directories
+coverage/
+.nyc_output/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Temporary files
+tmp/
+temp/
+
+# IDE and editor directories
+.vscode/
+.idea/
+
+
+# Windows
+Thumbs.db
