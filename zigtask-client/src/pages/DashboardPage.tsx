@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { TaskList } from '../components/tasks/TaskList';
+import { TaskCard } from '../components/tasks/TaskCard';
 import { TaskFiltersComponent } from '../components/tasks/TaskFilters';
 import { TaskStats } from '../components/tasks/TaskStats';
 import { TaskForm } from '../components/tasks/TaskForm';
@@ -43,6 +45,22 @@ const DashboardPage: React.FC = () =>
 
     // Get filtered tasks
     const filteredTasks = getFilteredTasks();
+
+    // Drag-and-drop columns
+    const columns = [
+        { id: 'To Do', title: 'To Do', tasks: filteredTasks.filter(t => t.status === 'To Do') },
+        { id: 'In Progress', title: 'In Progress', tasks: filteredTasks.filter(t => t.status === 'In Progress') },
+        { id: 'Done', title: 'Done', tasks: filteredTasks.filter(t => t.status === 'Done') },
+    ];
+
+    const onDragEnd = (result: DropResult) => {
+        const { source, destination, draggableId } = result;
+        if (!destination) return;
+        if (source.droppableId === destination.droppableId) return; // Không đổi cột thì thôi
+        const newStatus = destination.droppableId as Task['status'];
+        updateTaskOptimistic(draggableId, { status: newStatus });
+        updateTask({ id: draggableId, status: newStatus }); // Gọi API thật
+    };
 
     // Calculate task counts for filters
     const taskCounts = {
@@ -174,19 +192,50 @@ const DashboardPage: React.FC = () =>
                     taskCounts={taskCounts}
                 />
 
-                {/* Task List */}
-                <TaskList
-                    tasks={filteredTasks}
-                    isLoading={isLoading}
-                    onEdit={handleEditTask}
-                    onDelete={handleDeleteTask}
-                    onStatusChange={handleStatusChange}
-                    emptyMessage={
-                        Object.keys( filters ).length > 0
-                            ? 'No tasks match your current filters.'
-                            : 'No tasks yet. Create your first task to get started!'
-                    }
-                />
+                {/* Drag-and-drop Task Board */}
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <div className="grid gap-4 md:grid-cols-3">
+                        {columns.map((col) => (
+                            <Droppable droppableId={col.id} key={col.id}>
+                                {(provided, snapshot) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                        className={`bg-gray-50 dark:bg-gray-900 rounded-lg p-2 min-h-[200px] border border-gray-200 dark:border-gray-700 transition-shadow ${snapshot.isDraggingOver ? 'shadow-lg ring-2 ring-primary-500' : ''}`}
+                                    >
+                                        <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2 text-center">{col.title}</h2>
+                                        {isLoading ? (
+                                            <div className="flex justify-center py-8"><span>Loading...</span></div>
+                                        ) : col.tasks.length === 0 ? (
+                                            <div className="text-center text-gray-400 dark:text-gray-500 py-8 text-sm">No tasks</div>
+                                        ) : (
+                                            col.tasks.map((task, idx) => (
+                                                <Draggable draggableId={task.id} index={idx} key={task.id}>
+                                                    {(provided, snapshot) => (
+                                                        <div
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            className={`mb-3 ${snapshot.isDragging ? 'opacity-80' : ''}`}
+                                                        >
+                                                            <TaskCard
+                                                                task={task}
+                                                                onEdit={handleEditTask}
+                                                                onDelete={handleDeleteTask}
+                                                                onStatusChange={handleStatusChange}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            ))
+                                        )}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        ))}
+                    </div>
+                </DragDropContext>
 
                 {/* Task Form Modal */}
                 <Modal
