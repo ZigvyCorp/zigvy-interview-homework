@@ -31,6 +31,7 @@ npm run start:dev
 ```bash
 cd zigtask-client
 npm install
+cp .env.example .env # chỉnh sửa biến môi trường nếu cần
 npm start
 ```
 - Ứng dụng chạy tại: [http://localhost:3001](http://localhost:3001)
