@@ -28,7 +28,7 @@ export class AuthService
         return { token: this.jwtService.sign( payload ) };
     }
 
-    async login ( loginDto: LoginDto ): Promise<{ token: string }>
+    async login ( loginDto: LoginDto ): Promise<{ user: any; accessToken: string; refreshToken: string }>
     {
         const { email, password } = loginDto;
         const user = await this.usersService.findByEmail( email );
@@ -42,7 +42,30 @@ export class AuthService
             throw new UnauthorizedException( 'Invalid credentials' );
         }
         const payload = { sub: user.id, email: user.email };
-        return { token: this.jwtService.sign( payload ) };
+        
+        const accessToken = this.jwtService.sign( payload );
+        const refreshToken = this.jwtService.sign( payload, { expiresIn: '7d' } ); // Example: Refresh token expires in 7 days
+
+        // Remove password before returning user object
+        const { password: _, ...userWithoutPassword } = user;
+
+        return {
+            user: userWithoutPassword,
+            accessToken,
+            refreshToken,
+        };
+    }
+
+    async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
+        try {
+            // Giải mã refreshToken, xác thực hợp lệ
+            const payload = this.jwtService.verify(refreshToken);
+            // Có thể kiểm tra thêm trong DB nếu muốn revoke refresh token
+            const accessToken = this.jwtService.sign({ sub: payload.sub, email: payload.email });
+            return { accessToken };
+        } catch (error) {
+            throw new UnauthorizedException('Invalid or expired refresh token');
+        }
     }
 
     async validateUser ( id: string )

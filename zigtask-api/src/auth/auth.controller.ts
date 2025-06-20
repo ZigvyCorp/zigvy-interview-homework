@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { AuthResponseDto } from './dto/auth-response.dto'; // Import the new DTO
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('auth')
@@ -21,7 +22,7 @@ export class AuthController
 
     @Post('login')
     @ApiOperation({ summary: 'Authenticate user and get JWT token' })
-    @ApiResponse({ status: 200, description: 'Authentication successful' })
+    @ApiResponse({ status: 200, description: 'Authentication successful', type: AuthResponseDto })
     login(@Body() loginDto: LoginDto)
     {
         return this.authService.login(loginDto);
@@ -34,5 +35,20 @@ export class AuthController
     getProfile(@Request() req)
     {
         return req.user;
+    }
+
+    @Post('logout')
+    @ApiOperation({ summary: 'Logout user (client should remove tokens)' })
+    @ApiResponse({ status: 200, description: 'Logout successful' })
+    logout() {
+        // Thông thường chỉ cần xóa token phía client, có thể xử lý thêm blacklist nếu muốn
+        return { message: 'Logout successful' };
+    }
+
+    @Post('refresh')
+    @ApiOperation({ summary: 'Refresh access token using refresh token' })
+    @ApiResponse({ status: 200, description: 'Token refreshed', schema: { example: { accessToken: '...' } } })
+    async refresh(@Body() body: { refreshToken: string }) {
+        return this.authService.refreshToken(body.refreshToken);
     }
 }
