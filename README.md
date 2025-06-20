@@ -22,10 +22,10 @@ ZigTask allows users to:
 cd zigtask-api
 cp .env.example .env # chỉnh sửa biến môi trường nếu cần
 npm install
-npm run typeorm migration:run # nếu dùng PostgreSQL
+npm run typeorm migration:run
 npm run start:dev
 ```
-- Truy cập Swagger API docs tại: [http://localhost:3001/docs](http://localhost:3001/docs)
+- Truy cập Swagger API docs tại: [http://localhost:3000/docs](http://localhost:3000/docs)
 
 ### 2. Frontend (`zigtask-client`)
 ```bash
@@ -33,7 +33,7 @@ cd zigtask-client
 npm install
 npm start
 ```
-- Ứng dụng chạy tại: [http://localhost:3000](http://localhost:3000)
+- Ứng dụng chạy tại: [http://localhost:3001](http://localhost:3001)
 
 ### 3. CI/CD
 - Đã cấu hình CI cho cả API và client tại `.github/workflows/`
