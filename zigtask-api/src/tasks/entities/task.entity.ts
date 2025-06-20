@@ -1,11 +1,12 @@
 import
-    {
-        Entity,
-        PrimaryGeneratedColumn,
-        Column,
-        ManyToOne,
-        CreateDateColumn,
-    } from 'typeorm';
+{
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    CreateDateColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 export enum TaskStatus
@@ -27,8 +28,8 @@ export class Task
     @Column( { nullable: true } )
     description?: string;
 
-    @Column( { type: 'timestamp' } )
-    dueDate: Date;
+    @Column( { type: 'timestamp', nullable: true } )
+    dueDate?: Date;
 
     @Column( { type: 'enum', enum: TaskStatus, default: TaskStatus.TODO } )
     status: TaskStatus;
@@ -38,4 +39,7 @@ export class Task
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

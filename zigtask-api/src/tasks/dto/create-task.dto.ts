@@ -1,10 +1,10 @@
 import
-    {
-        IsNotEmpty,
-        IsOptional,
-        IsEnum,
-        IsISO8601,
-    } from 'class-validator';
+{
+    IsNotEmpty,
+    IsOptional,
+    IsEnum,
+    IsISO8601,
+} from 'class-validator';
 import { TaskStatus } from '../entities/task.entity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -18,9 +18,10 @@ export class CreateTaskDto
     @IsOptional()
     description?: string;
 
-    @ApiProperty( { example: '2025-07-01T12:00:00Z' } )
+    @ApiPropertyOptional( { example: '2025-07-01T12:00:00Z' } )
+    @IsOptional()
     @IsISO8601()
-    dueDate: string;
+    dueDate?: string;
 
     @ApiPropertyOptional( { enum: TaskStatus, default: TaskStatus.TODO } )
     @IsOptional()
