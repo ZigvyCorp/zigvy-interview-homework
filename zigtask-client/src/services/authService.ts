@@ -34,4 +34,9 @@ export const authService = {
         } );
         return response;
     },
+
+    getAccessToken (): string | null
+    {
+        return localStorage.getItem( 'accessToken' );
+    },
 };
