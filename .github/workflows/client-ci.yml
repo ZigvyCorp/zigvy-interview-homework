@@ -1,0 +1,40 @@
+name: Zigtask Client CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'zigtask-client/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'zigtask-client/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'npm'
+    
+    - name: Install dependencies
+      working-directory: zigtask-client
+      run: npm install
+    
+    - name: Run tests
+      working-directory: zigtask-client
+      run: npm test
+    
+    - name: Build
+      working-directory: zigtask-client
+      run: npm run build
+    
+    - name: Lint
+      working-directory: zigtask-client
+      run: npm run lint
