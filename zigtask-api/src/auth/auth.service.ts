@@ -14,18 +14,25 @@ export class AuthService
         private jwtService: JwtService,
     ) { }
 
-    async signup ( signupDto: SignupDto ): Promise<{ token: string }>
+    async signup ( signupDto: SignupDto ): Promise<{ accessToken: string; refreshToken: string; user: any }>
     {
-        const { email, password } = signupDto;
+        const { email, password, fullName } = signupDto;
         const existing = await this.usersService.findByEmail( email );
         if ( existing )
         {
             throw new UnauthorizedException( 'Email already in use' );
         }
         const hash = await bcrypt.hash( password, 10 );
-        const user = await this.usersService.create( { email, password: hash } );
+        const user = await this.usersService.create( { email, password: hash, fullName } );
         const payload = { sub: user.id, email: user.email };
-        return { token: this.jwtService.sign( payload ) };
+        const accessToken = this.jwtService.sign( payload );
+        const refreshToken = this.jwtService.sign( payload, { expiresIn: '7d' } );
+        const { password: _, ...userWithoutPassword } = user;
+        return {
+            accessToken,
+            refreshToken,
+            user: userWithoutPassword,
+        };
     }
 
     async login ( loginDto: LoginDto ): Promise<{ user: any; accessToken: string; refreshToken: string }>
@@ -42,7 +49,7 @@ export class AuthService
             throw new UnauthorizedException( 'Invalid credentials' );
         }
         const payload = { sub: user.id, email: user.email };
-        
+
         const accessToken = this.jwtService.sign( payload );
         const refreshToken = this.jwtService.sign( payload, { expiresIn: '7d' } ); // Example: Refresh token expires in 7 days
 
@@ -56,15 +63,18 @@ export class AuthService
         };
     }
 
-    async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
-        try {
+    async refreshToken ( refreshToken: string ): Promise<{ accessToken: string }>
+    {
+        try
+        {
             // Giải mã refreshToken, xác thực hợp lệ
-            const payload = this.jwtService.verify(refreshToken);
+            const payload = this.jwtService.verify( refreshToken );
             // Có thể kiểm tra thêm trong DB nếu muốn revoke refresh token
-            const accessToken = this.jwtService.sign({ sub: payload.sub, email: payload.email });
+            const accessToken = this.jwtService.sign( { sub: payload.sub, email: payload.email } );
             return { accessToken };
-        } catch (error) {
-            throw new UnauthorizedException('Invalid or expired refresh token');
+        } catch ( error )
+        {
+            throw new UnauthorizedException( 'Invalid or expired refresh token' );
         }
     }
 
