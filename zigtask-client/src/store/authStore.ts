@@ -57,32 +57,39 @@ export const useAuthStore = create<AuthState>()(
                 }
             },
 
-            register: async ( credentials: RegisterCredentials ) =>
-            {
-                try
-                {
-                    set( { isLoading: true, error: null } );
+            register: async ( credentials: RegisterCredentials ) => {
+    try {
+        set({ isLoading: true, error: null });
 
-                    const response = await authService.register( credentials );
+        const response = await authService.register(credentials);
 
-                    localStorage.setItem( 'accessToken', response.accessToken );
-                    localStorage.setItem( 'refreshToken', response.refreshToken );
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
 
-                    set( {
-                        user: response.user,
-                        isAuthenticated: true,
-                        isLoading: false,
-                    } );
-                } catch ( error: any )
-                {
-                    set( {
-                        error: error.message,
-                        isLoading: false,
-                        isAuthenticated: false,
-                    } );
-                    throw error;
-                }
-            },
+        set({
+            user: response.user,
+            isAuthenticated: true,
+            isLoading: false,
+        });
+
+        // Gọi getCurrentUser để xác thực accessToken mới đăng ký
+        try {
+            await get().getCurrentUser();
+        } catch (err) {
+            // Nếu lỗi, tự động logout để tránh vòng lặp refresh token
+            await get().logout();
+            set({ error: 'Phiên đăng ký không hợp lệ, vui lòng đăng nhập lại!', isLoading: false, isAuthenticated: false });
+            throw err;
+        }
+    } catch (error: any) {
+        set({
+            error: error.message,
+            isLoading: false,
+            isAuthenticated: false,
+        });
+        throw error;
+    }
+},
 
             logout: async () =>
             {

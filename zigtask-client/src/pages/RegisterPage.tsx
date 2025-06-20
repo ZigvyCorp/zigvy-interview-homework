@@ -10,7 +10,7 @@ import { Input } from '../components/ui/Input';
 import { useToast } from '../hooks/useToast';
 
 const registerSchema = yup.object({
-  name: yup.string().optional(),
+  name: yup.string().optional(), // Optional, không gửi lên backend nếu rỗng
   email: yup.string().email('Invalid email format').required('Email is required'),
   password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
   confirmPassword: yup
@@ -36,18 +36,22 @@ const RegisterPage: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
-    try {
-      setIsLoading(true);
-      const { confirmPassword, ...registerData } = data;
-      await registerUser(registerData);
-      toast.success('Account Created!', 'Welcome to ZigTask! You are now logged in.');
-      navigate('/dashboard');
-    } catch (error: any) {
-      toast.error('Registration Failed', error.message || 'Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    setIsLoading(true);
+    // Chỉ gửi đúng các trường backend yêu cầu
+    const { email, password, name } = data;
+    // Nếu name bị rỗng thì không gửi lên (backend không yêu cầu)
+    const payload: { email: string; password: string; name?: string } = { email, password };
+    if (name && name.trim() !== '') payload.name = name.trim();
+    await registerUser(payload);
+    toast.success('Account Created!', 'Welcome to ZigTask! You are now logged in.');
+    navigate('/dashboard');
+  } catch (error: any) {
+    toast.error('Registration Failed', error.message || 'Please try again.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -65,68 +69,56 @@ const RegisterPage: React.FC = () => {
               sign in to your existing account
             </Link>
           </p>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Or{' '}
-                        <Link
-                            to="/login"
-                            className="font-medium text-primary-600 hover:text-primary-500"
-                        >
-                            sign in to your existing account
-                        </Link>
-                    </p>
-                </div>
-
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit( onSubmit )}>
-                    <div className="space-y-4">
-                        <Input
-                            {...register( 'name' )}
-                            type="text"
-                            label="Full Name (Optional)"
-                            placeholder="Enter your full name"
-                            error={errors.name?.message}
-                            autoComplete="name"
-                        />
-
-                        <Input
-                            {...register( 'email' )}
-                            type="email"
-                            label="Email address"
-                            placeholder="Enter your email"
-                            error={errors.email?.message}
-                            autoComplete="email"
-                        />
-
-                        <Input
-                            {...register( 'password' )}
-                            type="password"
-                            label="Password"
-                            placeholder="Create a password"
-                            error={errors.password?.message}
-                            autoComplete="new-password"
-                        />
-
-                        <Input
-                            {...register( 'confirmPassword' )}
-                            type="password"
-                            label="Confirm Password"
-                            placeholder="Confirm your password"
-                            error={errors.confirmPassword?.message}
-                            autoComplete="new-password"
-                        />
-                    </div>
-
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        loading={isLoading}
-                        disabled={isLoading}
-                    >
-                        Create Account
-                    </Button>
-                </form>
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              <Input
+                {...register('name')}
+                type="text"
+                label="Full Name (Tuỳ chọn, không bắt buộc)"
+                placeholder="Enter your full name"
+                error={errors.name?.message}
+                autoComplete="name"
+              />
+              <Input
+                {...register('email')}
+                type="email"
+                label="Email address"
+                placeholder="Enter your email"
+                error={errors.email?.message}
+                autoComplete="email"
+              />
+              <Input
+                {...register('password')}
+                type="password"
+                label="Password"
+                placeholder="Create a password"
+                error={errors.password?.message}
+                autoComplete="new-password"
+              />
+              <Input
+                {...register('confirmPassword')}
+                type="password"
+                label="Confirm Password"
+                placeholder="Confirm your password"
+                error={errors.confirmPassword?.message}
+                autoComplete="new-password"
+              />
             </div>
+            <div>
+              <Button
+                type="submit"
+                className="w-full"
+                loading={isLoading}
+                disabled={isLoading}
+              >
+                Create Account
+              </Button>
+            </div>
+          </form>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default RegisterPage;

@@ -97,11 +97,13 @@ class ApiService
         return { accessToken };
     }
 
-    private handleAuthError ()
-    {
-        localStorage.removeItem( 'accessToken' );
-        localStorage.removeItem( 'refreshToken' );
-        window.location.href = '/login';
+    private handleAuthError () {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        // Log ra console để dễ debug
+        console.warn('[API] handleAuthError: Redirect to /login');
+        // Reload trang về login, chặn mọi vòng lặp fetch khi chưa xác thực
+        window.location.replace('/login');
     }
 
     private handleError ( error: any ): ApiError

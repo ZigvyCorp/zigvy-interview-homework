@@ -7,6 +7,7 @@ import { TaskForm } from '../components/tasks/TaskForm';
 import { Modal } from '../components/ui/Modal';
 import { Button } from '../components/ui/Button';
 import { useTaskStore } from '../store/taskStore';
+import { useAuthStore } from '../store/authStore';
 import { useToast } from '../hooks/useToast';
 import { Task, CreateTaskRequest } from '../types/task';
 import { PlusIcon } from '@heroicons/react/24/outline';
@@ -32,11 +33,13 @@ const DashboardPage: React.FC = () =>
     const [ editingTask, setEditingTask ] = useState<Task | null>( null );
     const [ showDeleteConfirm, setShowDeleteConfirm ] = useState<string | null>( null );
 
-    // Load tasks on component mount
-    useEffect( () =>
-    {
-        getTasks();
-    }, [ getTasks ] );
+    // Load tasks on component mount, chỉ khi đã xác thực
+    const { isAuthenticated } = useAuthStore();
+    useEffect(() => {
+        if (isAuthenticated) {
+            getTasks();
+        }
+    }, [getTasks, isAuthenticated]);
 
     // Get filtered tasks
     const filteredTasks = getFilteredTasks();

@@ -31,14 +31,20 @@ export const useTaskStore = create<TaskState>( ( set, get ) => ( {
 
     getTasks: async () =>
     {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            // Không gọi API nếu chưa xác thực
+            set({ error: 'Bạn chưa đăng nhập!', isLoading: false });
+            return;
+        }
         try
         {
-            set( { isLoading: true, error: null } );
-            const tasks = await taskService.getTasks( get().filters );
-            set( { tasks, isLoading: false } );
-        } catch ( error: any )
+            set({ isLoading: true, error: null });
+            const tasks = await taskService.getTasks(get().filters);
+            set({ tasks, isLoading: false });
+        } catch (error: any)
         {
-            set( { error: error.message, isLoading: false } );
+            set({ error: error.message, isLoading: false });
         }
     },
 
