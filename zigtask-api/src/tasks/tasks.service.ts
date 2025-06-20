@@ -17,7 +17,7 @@ export class TasksService
     {
         const task = this.tasksRepo.create( {
             ...dto,
-            dueDate: new Date( dto.dueDate ),
+            dueDate: dto.dueDate ? new Date( dto.dueDate ) : undefined,
             status: dto.status || TaskStatus.TODO,
             user: { id: userId } as any,
         } );
